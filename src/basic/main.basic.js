@@ -9,7 +9,11 @@ import {
 } from './components/Cart';
 import { productSelectElement } from './components/productSelect';
 import { addCartButtonElement } from './components/Button';
-import { stockQuantityStatusElement } from './components/StockQuantityStatus';
+import {
+  stockQuantityStatusElement,
+  updateStockStatus,
+} from './components/StockQuantityStatus';
+import { renderUpdatePoint } from './components/Point';
 
 let products, selectedProduct;
 
@@ -229,39 +233,9 @@ function calcCart() {
     cartTotalElement.appendChild(span);
   }
 
-  updateStockInfo();
+  updateStockStatus(products);
 
-  renderBonusPts();
-}
-
-const renderBonusPts = () => {
-  point = Math.floor(cartTotalAmount / 1000);
-  var ptsTag = document.getElementById('loyalty-points');
-  if (!ptsTag) {
-    ptsTag = document.createElement('span');
-    ptsTag.id = 'loyalty-points';
-    ptsTag.className = 'text-blue-500 ml-2';
-    cartTotalElement.appendChild(ptsTag);
-  }
-  ptsTag.textContent = '(포인트: ' + point + ')';
-};
-
-function updateStockInfo() {
-  var infoMsg = '';
-
-  products.forEach(function (item) {
-    if (item.quantity < 5) {
-      infoMsg +=
-        item.name +
-        ': ' +
-        (item.quantity > 0
-          ? '재고 부족 (' + item.quantity + '개 남음)'
-          : '품절') +
-        '\n';
-    }
-  });
-
-  stockQuantityStatusElement.textContent = infoMsg;
+  renderUpdatePoint(point, cartTotalAmount);
 }
 
 main();
