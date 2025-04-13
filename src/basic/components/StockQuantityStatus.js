@@ -1,11 +1,13 @@
 import { renderCreateElement } from '../renderUtils';
+import { productState } from '../productUtils';
 
 export const stockQuantityStatusElement = renderCreateElement('div', {
   id: 'stock-status',
   className: 'text-sm text-gray-500 mt-2',
 });
 
-export const updateStockStatus = (products) => {
+export const updateStockStatus = () => {
+  const products = productState.getProducts();
   let stockStatusMessage = '';
   const limitStockQuantity = 5;
 

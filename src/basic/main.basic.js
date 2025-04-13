@@ -1,4 +1,3 @@
-import { getProducts } from './productsUtils';
 import { flashSale, recommendSale } from './saleUtils';
 import {
   cartWrapperElement,
@@ -11,22 +10,14 @@ import {
   productSelectElement,
   renderProductSelectOptions,
 } from './components/productSelect';
-import {
-  addCartButtonElement,
-  addCartButtonClickEvent,
-} from './components/AddCartButton';
-import {
-  stockQuantityStatusElement,
-  updateStockStatus,
-} from './components/StockQuantityStatus';
-import { renderUpdatePoint } from './components/Point';
+import { addCartButtonElement } from './components/AddCartButton';
+import { stockQuantityStatusElement } from './components/StockQuantityStatus';
 import { renderCreateElement } from './renderUtils';
+import { productState } from './productUtils';
+import { calcCart } from './cartUtils';
 
-let products, selectedProduct;
-
-let point,
-  cartTotalAmount,
-  cartItemQuantity = 0;
+let products = productState.getProducts();
+let selectedProduct;
 
 function renderInit() {
   const rootElement = document.getElementById('app');
@@ -41,7 +32,7 @@ function renderInit() {
   ];
 
   cartContentElement.append(...cartChildren);
-  renderProductSelectOptions(products);
+  renderProductSelectOptions();
   cartWrapperElement.appendChild(cartContentElement);
 
   rootElement.appendChild(cartWrapperElement);
@@ -145,8 +136,6 @@ function eventInit() {
 }
 
 function main() {
-  products = getProducts();
-
   renderInit();
   eventInit();
 
@@ -154,76 +143,6 @@ function main() {
 
   flashSale();
   recommendSale();
-}
-
-function calcCart() {
-  cartTotalAmount = 0;
-  cartItemQuantity = 0;
-  var cartItems = cartItemsElement.children;
-  var subTot = 0;
-
-  for (var i = 0; i < cartItems.length; i++) {
-    (function () {
-      var curItem;
-
-      for (var j = 0; j < products.length; j++) {
-        if (products[j].id === cartItems[i].id) {
-          curItem = products[j];
-          break;
-        }
-      }
-      var q = parseInt(
-        cartItems[i].querySelector('span').textContent.split('x ')[1],
-      );
-      var itemTot = curItem.price * q;
-      var disc = 0;
-      cartItemQuantity += q;
-      subTot += itemTot;
-
-      if (q >= 10) {
-        if (curItem.id === 'p1') disc = 0.1;
-        else if (curItem.id === 'p2') disc = 0.15;
-        else if (curItem.id === 'p3') disc = 0.2;
-        else if (curItem.id === 'p4') disc = 0.05;
-        else if (curItem.id === 'p5') disc = 0.25;
-      }
-      cartTotalAmount += itemTot * (1 - disc);
-    })();
-  }
-
-  let discRate = 0;
-
-  if (cartItemQuantity >= 30) {
-    var bulkDisc = cartTotalAmount * 0.25;
-    var itemDisc = subTot - cartTotalAmount;
-
-    if (bulkDisc > itemDisc) {
-      cartTotalAmount = subTot * (1 - 0.25);
-      discRate = 0.25;
-    } else {
-      discRate = (subTot - cartTotalAmount) / subTot;
-    }
-  } else {
-    discRate = (subTot - cartTotalAmount) / subTot;
-  }
-
-  if (new Date().getDay() === 2) {
-    cartTotalAmount *= 1 - 0.1;
-    discRate = Math.max(discRate, 0.1);
-  }
-
-  cartTotalElement.textContent = '총액: ' + Math.round(cartTotalAmount) + '원';
-
-  if (discRate > 0) {
-    var span = document.createElement('span');
-    span.className = 'text-green-500 ml-2';
-    span.textContent = '(' + (discRate * 100).toFixed(1) + '% 할인 적용)';
-    cartTotalElement.appendChild(span);
-  }
-
-  updateStockStatus(products);
-
-  renderUpdatePoint(point, cartTotalAmount);
 }
 
 main();
