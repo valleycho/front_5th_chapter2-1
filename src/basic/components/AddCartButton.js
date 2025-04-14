@@ -1,10 +1,9 @@
 import { renderCreateElement } from '../renderUtils';
 import { productSelectElement } from './productSelect';
-import { productState } from '../productUtils';
-import { calcCart } from '../cartUtils';
+import { productState } from '../utils';
+import { calcCart } from '../utils/cartUtils';
 import { cartItemsElement } from './Cart';
-
-let selectedProduct;
+import { selectedProductState } from '../utils';
 
 export const addCartButtonElement = renderCreateElement('button', {
   id: 'add-to-cart',
@@ -55,6 +54,6 @@ export function handleAddCartButtonClick() {
 
     calcCart();
 
-    selectedProduct = selItem;
+    selectedProductState.setSelectedProduct(selItem);
   }
 }

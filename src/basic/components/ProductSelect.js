@@ -1,15 +1,15 @@
+import { productState } from '../utils';
 import { renderCreateElement } from '../renderUtils';
-import { productState } from '../productUtils';
 
 export const productSelectElement = renderCreateElement('select', {
   id: 'product-select',
   className: 'border rounded p-2 mr-2',
 });
 
-export const renderProductSelectOptions = () => {
-  const products = productState.getProducts();
-
+export const updateOptionElement = () => {
   productSelectElement.innerHTML = '';
+
+  const products = productState.getProducts();
 
   products.forEach((product) => {
     const optionElement = renderCreateElement('option', {
@@ -17,7 +17,9 @@ export const renderProductSelectOptions = () => {
       textContent: `${product.name} - ${product.price}원`,
     });
 
-    if (product.quantity === 0) optionElement.disabled = true;
+    if (product.quantity === 0) {
+      optionElement.disabled = true;
+    }
 
     productSelectElement.appendChild(optionElement);
   });

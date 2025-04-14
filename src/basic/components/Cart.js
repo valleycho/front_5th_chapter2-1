@@ -1,6 +1,6 @@
 import { renderCreateElement } from '../renderUtils';
-import { productState } from '../productUtils';
-import { calcCart } from '../cartUtils';
+import { productState } from '../utils';
+import { calcCart } from '../utils/cartUtils';
 
 export const cartWrapperElement = renderCreateElement('div', {
   className: 'bg-gray-100 p-8',

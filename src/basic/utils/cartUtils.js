@@ -1,7 +1,7 @@
-import { cartItemsElement, cartTotalElement } from './components/Cart';
-import { renderUpdatePoint } from './components/Point';
-import { updateStockStatus } from './components/StockQuantityStatus';
-import { productState } from './productUtils';
+import { cartItemsElement, cartTotalElement } from '../components/Cart';
+import { renderUpdatePoint } from '../components/Point';
+import { updateStockStatus } from '../components/StockQuantityStatus';
+import { productState } from '.';
 
 export function calcCart() {
   const products = productState.getProducts();

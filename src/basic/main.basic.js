@@ -1,23 +1,15 @@
-import { flashSale, recommendSale } from './saleUtils';
+import { saleInit, eventInit, calcCart } from './utils';
 import {
   cartWrapperElement,
   cartContentElement,
   cartText,
   cartItemsElement,
   cartTotalElement,
-} from './components/Cart';
-import {
   productSelectElement,
-  renderProductSelectOptions,
-} from './components/productSelect';
-import { addCartButtonElement } from './components/AddCartButton';
-import { stockQuantityStatusElement } from './components/StockQuantityStatus';
-import { productState } from './productUtils';
-import { calcCart } from './cartUtils';
-import { handleAddCartButtonClick } from './components/AddCartButton';
-import { handleCartItemsClick } from './components/Cart';
-
-let products = productState.getProducts();
+  updateOptionElement,
+  addCartButtonElement,
+  stockQuantityStatusElement,
+} from './components';
 
 function renderInit() {
   const rootElement = document.getElementById('app');
@@ -32,16 +24,10 @@ function renderInit() {
   ];
 
   cartContentElement.append(...cartChildren);
-  renderProductSelectOptions();
+  updateOptionElement();
   cartWrapperElement.appendChild(cartContentElement);
 
   rootElement.appendChild(cartWrapperElement);
-}
-
-function eventInit() {
-  addCartButtonElement.addEventListener('click', handleAddCartButtonClick);
-
-  cartItemsElement.addEventListener('click', handleCartItemsClick);
 }
 
 function main() {
@@ -50,8 +36,7 @@ function main() {
 
   calcCart();
 
-  flashSale();
-  recommendSale();
+  saleInit();
 }
 
 main();

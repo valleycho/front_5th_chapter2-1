@@ -1,5 +1,5 @@
 import { renderCreateElement } from '../renderUtils';
-import { productState } from '../productUtils';
+import { productState } from '../utils';
 
 export const stockQuantityStatusElement = renderCreateElement('div', {
   id: 'stock-status',

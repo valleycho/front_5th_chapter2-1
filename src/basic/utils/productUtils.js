@@ -10,3 +10,10 @@ export const productState = {
     return this.products;
   },
 };
+
+export const selectedProductState = {
+  selectedProduct: undefined,
+  setSelectedProduct(selectedProduct) {
+    this.selectedProduct = selectedProduct;
+  },
+};
