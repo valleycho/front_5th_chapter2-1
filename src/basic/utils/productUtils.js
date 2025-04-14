@@ -9,6 +9,9 @@ export const productState = {
   getProducts() {
     return this.products;
   },
+  getFindProduct(productId) {
+    return this.products.find((product) => product.id === productId);
+  },
 };
 
 export const selectedProductState = {
