@@ -1,26 +1,25 @@
-import { renderCreateElement } from '../renderUtils';
-import { productState } from '../utils';
-import { calcCart } from '../utils/cartUtils';
+import { productState, calcCart } from '../utils';
+import { createElement } from '../utils/elementUtils';
 
-export const cartWrapperElement = renderCreateElement('div', {
+export const cartWrapperElement = createElement('div', {
   className: 'bg-gray-100 p-8',
 });
 
-export const cartContentElement = renderCreateElement('div', {
+export const cartContentElement = createElement('div', {
   className:
     'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8',
 });
 
-export const cartText = renderCreateElement('h1', {
+export const cartText = createElement('h1', {
   className: 'text-2xl font-bold mb-4',
   textContent: '장바구니',
 });
 
-export const cartItemsElement = renderCreateElement('div', {
+export const cartItemsElement = createElement('div', {
   id: 'cart-items',
 });
 
-export const cartTotalElement = renderCreateElement('div', {
+export const cartTotalElement = createElement('div', {
   id: 'cart-total',
   className: 'text-xl font-bold my-4',
 });

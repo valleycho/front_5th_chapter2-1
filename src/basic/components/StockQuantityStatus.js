@@ -1,7 +1,7 @@
-import { renderCreateElement } from '../renderUtils';
 import { productState } from '../utils';
+import { createElement } from '../utils/elementUtils';
 
-export const stockQuantityStatusElement = renderCreateElement('div', {
+export const stockQuantityStatusElement = createElement('div', {
   id: 'stock-status',
   className: 'text-sm text-gray-500 mt-2',
 });

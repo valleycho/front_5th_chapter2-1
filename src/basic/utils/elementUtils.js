@@ -1,3 +1,3 @@
-export const renderCreateElement = (tagName, props) => {
+export function createElement(tagName, props) {
   return Object.assign(document.createElement(tagName), props);
-};
+}

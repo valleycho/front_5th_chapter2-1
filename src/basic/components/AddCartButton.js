@@ -1,11 +1,9 @@
-import { renderCreateElement } from '../renderUtils';
+import { selectedProductState, calcCart, productState } from '../utils';
+import { createElement } from '../utils/elementUtils';
 import { productSelectElement } from './productSelect';
-import { productState } from '../utils';
-import { calcCart } from '../utils/cartUtils';
 import { cartItemsElement } from './Cart';
-import { selectedProductState } from '../utils';
 
-export const addCartButtonElement = renderCreateElement('button', {
+export const addCartButtonElement = createElement('button', {
   id: 'add-to-cart',
   className: 'bg-blue-500 text-white px-4 py-2 rounded',
   textContent: '추가',
@@ -35,7 +33,7 @@ export function handleAddCartButtonClick() {
         alert('재고가 부족합니다.');
       }
     } else {
-      const newItem = renderCreateElement('div', {
+      const newItem = createElement('div', {
         id: itemToAdd.id,
         className: 'flex justify-between items-center mb-2',
         innerHTML: `

@@ -1,4 +1,4 @@
-import { renderCreateElement } from '../renderUtils';
+import { createElement } from '../utils';
 import { cartTotalElement } from './Cart';
 
 export const renderUpdatePoint = (point, cartTotalAmount) => {
@@ -7,7 +7,7 @@ export const renderUpdatePoint = (point, cartTotalAmount) => {
   let pointElement = document.getElementById('loyalty-points');
 
   if (!pointElement) {
-    pointElement = renderCreateElement('span', {
+    pointElement = createElement('span', {
       id: 'loyalty-points',
       className: 'text-blue-500 ml-2',
     });
