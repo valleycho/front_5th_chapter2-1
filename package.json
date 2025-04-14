@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:basic": "vite serve --open ./index.basic.html",
     "build": "vite build",
     "preview": "vite preview",
     "start:basic": "vite serve --open ./index.basic.html",

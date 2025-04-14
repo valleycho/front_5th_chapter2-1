@@ -1,75 +1,135 @@
-import { cartItemsElement, cartTotalElement } from '../components/Cart';
-import { renderUpdatePoint } from '../components/Point';
-import { updateStockStatus } from '../components/StockQuantityStatus';
-import { productState } from '.';
+import {
+  cartItemsElement,
+  cartTotalElement,
+  renderUpdatePoint,
+  updateStockStatus,
+} from '../components';
+import { createElement, productState } from '.';
 
-export function calcCart() {
+function calculateCartTotal(cartState) {
   const products = productState.getProducts();
 
-  let [point, cartTotalAmount, cartItemQuantity, subTot] = [0, 0, 0, 0];
+  let cartItemsChildrenElement = cartItemsElement.children;
 
-  let cartItems = cartItemsElement.children;
+  for (let i = 0; i < cartItemsChildrenElement.length; i++) {
+    let currentProduct;
 
-  for (var i = 0; i < cartItems.length; i++) {
-    (function () {
-      var curItem;
+    for (let j = 0; j < products.length; j++) {
+      const isSelectedSameProduct =
+        products[j].id === cartItemsChildrenElement[i].id;
 
-      for (var j = 0; j < products.length; j++) {
-        if (products[j].id === cartItems[i].id) {
-          curItem = products[j];
-          break;
-        }
+      if (isSelectedSameProduct) {
+        currentProduct = products[j];
+        break;
       }
-      var q = parseInt(
-        cartItems[i].querySelector('span').textContent.split('x ')[1],
-      );
-      var itemTot = curItem.price * q;
-      var disc = 0;
-      cartItemQuantity += q;
-      subTot += itemTot;
+    }
 
-      if (q >= 10) {
-        if (curItem.id === 'p1') disc = 0.1;
-        else if (curItem.id === 'p2') disc = 0.15;
-        else if (curItem.id === 'p3') disc = 0.2;
-        else if (curItem.id === 'p4') disc = 0.05;
-        else if (curItem.id === 'p5') disc = 0.25;
-      }
-      cartTotalAmount += itemTot * (1 - disc);
-    })();
+    let quantity = parseInt(
+      cartItemsChildrenElement[i]
+        .querySelector('span')
+        .textContent.split('x ')[1],
+    );
+    let itemTotalPrice = currentProduct.price * quantity;
+    const isDiscount = quantity >= 10;
+    let discountRate = getCurrentProductDiscountRate(
+      isDiscount,
+      currentProduct,
+    );
+
+    cartState.cartItemQuantity += quantity;
+    cartState.subTot += itemTotalPrice;
+    cartState.cartTotalAmount += itemTotalPrice * (1 - discountRate);
+  }
+}
+
+function getCurrentProductDiscountRate(isDiscount, currentProduct) {
+  if (!isDiscount) return 0;
+
+  if (currentProduct.id === 'p1') {
+    return 0.1;
+  } else if (currentProduct.id === 'p2') {
+    return 0.15;
+  } else if (currentProduct.id === 'p3') {
+    return 0.2;
+  } else if (currentProduct.id === 'p4') {
+    return 0.05;
+  } else if (currentProduct.id === 'p5') {
+    return 0.25;
   }
 
-  let discRate = 0;
+  return 0;
+}
 
-  if (cartItemQuantity >= 30) {
-    var bulkDisc = cartTotalAmount * 0.25;
-    var itemDisc = subTot - cartTotalAmount;
+function calculateDiscountRate(cartState) {
+  const { cartTotalAmount, subTot, cartItemQuantity } = cartState;
+  const minQuantityForBulkDiscount = 30;
+  const twentyFivePercentDiscountRate = 0.25;
 
-    if (bulkDisc > itemDisc) {
-      cartTotalAmount = subTot * (1 - 0.25);
-      discRate = 0.25;
+  if (cartItemQuantity >= minQuantityForBulkDiscount) {
+    const bulkDiscountAmount = cartTotalAmount * twentyFivePercentDiscountRate;
+    const itemDiscountAmount = subTot - cartTotalAmount;
+
+    if (bulkDiscountAmount > itemDiscountAmount) {
+      cartTotalAmount = subTot * (1 - twentyFivePercentDiscountRate);
+      cartState.discountRate = twentyFivePercentDiscountRate;
     } else {
-      discRate = (subTot - cartTotalAmount) / subTot;
+      cartState.discountRate = (subTot - cartTotalAmount) / subTot;
     }
   } else {
-    discRate = (subTot - cartTotalAmount) / subTot;
+    cartState.discountRate = (subTot - cartTotalAmount) / subTot;
   }
+}
 
-  if (new Date().getDay() === 2) {
-    cartTotalAmount *= 1 - 0.1;
-    discRate = Math.max(discRate, 0.1);
+function specialDiscount(cartState) {
+  const isSpecialDiscountDay = new Date().getDay() === 2;
+  const tenPercentDiscountRate = 0.1;
+
+  if (isSpecialDiscountDay) {
+    cartState.cartTotalAmount *= 1 - tenPercentDiscountRate;
+    cartState.discountRate = Math.max(
+      cartState.discountRate,
+      tenPercentDiscountRate,
+    );
   }
+}
 
-  cartTotalElement.textContent = '총액: ' + Math.round(cartTotalAmount) + '원';
+function updateTotalPrice(cartState) {
+  cartTotalElement.textContent = `총액: ${Math.round(cartState.cartTotalAmount)}원`;
+}
 
-  if (discRate > 0) {
-    var span = document.createElement('span');
-    span.className = 'text-green-500 ml-2';
-    span.textContent = '(' + (discRate * 100).toFixed(1) + '% 할인 적용)';
-    cartTotalElement.appendChild(span);
+function updateCartDiscount(discountRate) {
+  const discountedRate = (discountRate * 100).toFixed(1);
+
+  const discountElement = createElement('span', {
+    className: 'text-green-500 ml-2',
+    textContent: `(${discountedRate}% 할인 적용)`,
+  });
+
+  cartTotalElement.appendChild(discountElement);
+}
+
+export function updateCart() {
+  const cartState = {
+    discountRate: 0,
+    cartItemQuantity: 0,
+    cartTotalAmount: 0,
+    subTot: 0,
+  };
+  let point = 0;
+
+  calculateCartTotal(cartState);
+
+  calculateDiscountRate(cartState);
+
+  specialDiscount(cartState);
+
+  updateTotalPrice(cartState);
+
+  if (cartState.discountRate > 0) {
+    updateCartDiscount(cartState.discountRate);
   }
 
   updateStockStatus();
 
-  renderUpdatePoint(point, cartTotalAmount);
+  renderUpdatePoint(point, cartState.cartTotalAmount);
 }

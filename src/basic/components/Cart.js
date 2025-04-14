@@ -1,4 +1,4 @@
-import { productState, calcCart } from '../utils';
+import { productState, updateCart } from '../utils';
 import { createElement } from '../utils/elementUtils';
 
 export const cartWrapperElement = createElement('div', {
@@ -70,6 +70,6 @@ export function handleCartItemsClick(event) {
       itemElem.remove();
     }
 
-    calcCart();
+    updateCart();
   }
 }

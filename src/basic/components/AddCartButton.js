@@ -1,4 +1,4 @@
-import { selectedProductState, calcCart, productState } from '../utils';
+import { selectedProductState, updateCart, productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
 import { productSelectElement } from './productSelect';
 import { cartItemsElement } from './Cart';
@@ -50,7 +50,7 @@ export function handleAddCartButtonClick() {
       itemToAdd.quantity--;
     }
 
-    calcCart();
+    updateCart();
 
     selectedProductState.setSelectedProduct(selItem);
   }

@@ -1,4 +1,4 @@
-import { saleInit, eventInit, calcCart, renderInit } from './utils';
+import { saleInit, eventInit, updateCart, renderInit } from './utils';
 
 function initApp() {
   renderInit();
@@ -9,7 +9,7 @@ function initApp() {
 function main() {
   initApp();
 
-  calcCart();
+  updateCart();
 }
 
 main();
