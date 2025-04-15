@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://valleycho.github.io/front_5th_chapter2-1/",
   "scripts": {
     "dev": "vite",
     "dev:basic": "vite serve --open ./index.basic.html",
