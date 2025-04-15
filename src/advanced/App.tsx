@@ -1,10 +1,13 @@
 import Cart from './components/Cart';
+import { CartProvider } from './provider/CartProvider';
 import { ProductsProvider } from './provider/ProductProvider';
 
 function App() {
   return (
     <ProductsProvider>
-      <Cart />
+      <CartProvider>
+        <Cart />
+      </CartProvider>
     </ProductsProvider>
   );
 }
