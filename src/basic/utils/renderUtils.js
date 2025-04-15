@@ -4,7 +4,7 @@ import {
   cartText,
   cartItemsElement,
   cartTotalElement,
-  productSelectElement,
+  selectProductElement,
   updateOptionElement,
   addCartButtonElement,
   stockQuantityStatusElement,
@@ -17,7 +17,7 @@ export function renderInit() {
     cartText,
     cartItemsElement,
     cartTotalElement,
-    productSelectElement,
+    selectProductElement,
     addCartButtonElement,
     stockQuantityStatusElement,
   ];

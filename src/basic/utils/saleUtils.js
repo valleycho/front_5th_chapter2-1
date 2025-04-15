@@ -1,6 +1,6 @@
 import { minute, tenSecond, thirtySecond, twentySecond, randomNumber } from '.';
 import { productState, selectedProductState } from './productUtils';
-import { updateOptionElement } from '../components/productSelect';
+import { updateOptionElement } from '../components';
 
 // 번개세일
 export function flashSale() {

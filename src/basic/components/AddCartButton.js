@@ -1,7 +1,6 @@
 import { selectedProductState, updateCart, productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
-import { productSelectElement } from './productSelect';
-import { cartItemsElement } from './Cart';
+import { selectProductElement, cartItemsElement } from '../components';
 
 export const addCartButtonElement = createElement('button', {
   id: 'add-to-cart',
@@ -27,7 +26,7 @@ function addNewCartItem(itemToAdd) {
 }
 
 export function handleAddCartButtonClick() {
-  const selectedItem = productSelectElement.value;
+  const selectedItem = selectProductElement.value;
 
   const addItem = productState.getFindProduct(selectedItem);
   const isAvailableQuantity = (addItem?.quantity ?? 0) > 0;

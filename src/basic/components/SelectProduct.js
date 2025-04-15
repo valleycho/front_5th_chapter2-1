@@ -1,13 +1,13 @@
 import { productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
 
-export const productSelectElement = createElement('select', {
+export const selectProductElement = createElement('select', {
   id: 'product-select',
   className: 'border rounded p-2 mr-2',
 });
 
 export const updateOptionElement = () => {
-  productSelectElement.innerHTML = '';
+  selectProductElement.innerHTML = '';
 
   const products = productState.getProducts();
 
@@ -21,6 +21,6 @@ export const updateOptionElement = () => {
       optionElement.disabled = true;
     }
 
-    productSelectElement.appendChild(optionElement);
+    selectProductElement.appendChild(optionElement);
   });
 };
