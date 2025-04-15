@@ -61,22 +61,25 @@ function getCurrentProductDiscountRate(isDiscount, currentProduct) {
 }
 
 function calculateDiscountRate(cartState) {
-  const { cartTotalAmount, subTot, cartItemQuantity } = cartState;
   const minQuantityForBulkDiscount = 30;
   const twentyFivePercentDiscountRate = 0.25;
 
-  if (cartItemQuantity >= minQuantityForBulkDiscount) {
-    const bulkDiscountAmount = cartTotalAmount * twentyFivePercentDiscountRate;
-    const itemDiscountAmount = subTot - cartTotalAmount;
+  if (cartState.cartItemQuantity >= minQuantityForBulkDiscount) {
+    const bulkDiscountAmount =
+      cartState.cartTotalAmount * twentyFivePercentDiscountRate;
+    const itemDiscountAmount = cartState.subTot - cartState.cartTotalAmount;
 
     if (bulkDiscountAmount > itemDiscountAmount) {
-      cartTotalAmount = subTot * (1 - twentyFivePercentDiscountRate);
+      cartState.cartTotalAmount =
+        cartState.subTot * (1 - twentyFivePercentDiscountRate);
       cartState.discountRate = twentyFivePercentDiscountRate;
     } else {
-      cartState.discountRate = (subTot - cartTotalAmount) / subTot;
+      cartState.discountRate =
+        (cartState.subTot - cartState.cartTotalAmount) / cartState.subTot;
     }
   } else {
-    cartState.discountRate = (subTot - cartTotalAmount) / subTot;
+    cartState.discountRate =
+      (cartState.subTot - cartState.cartTotalAmount) / cartState.subTot;
   }
 }
 
