@@ -1,9 +1,7 @@
+import Cart from './components/Cart';
+
 function App() {
-  return (
-    <>
-      <h1>Hello, World!</h1>
-    </>
-  );
+  return <Cart />;
 }
 
 export default App;
