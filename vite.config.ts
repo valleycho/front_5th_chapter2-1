@@ -4,13 +4,14 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: "",
   build: {
     rollupOptions: {
       input: {
-        basic: resolve(__dirname, 'index.basic.html'),
+        main: resolve(__dirname, 'index.basic.html'),
         advanced: resolve(__dirname, 'index.advanced.html')
       }
-    }
+    },
   },
   test: {
     globals: true,
