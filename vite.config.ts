@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: "",
+  base: '/front_5th_chapter2-1/',
   build: {
     rollupOptions: {
       input: {
@@ -12,6 +12,7 @@ export default defineConfig({
         advanced: resolve(__dirname, 'index.advanced.html')
       }
     },
+    outDir: 'dist',
   },
   test: {
     globals: true,
