@@ -8,6 +8,8 @@
     "dev:basic": "vite serve --open ./index.basic.html",
     "dev:advanced": "vite serve --open ./index.advanced.html",
     "build": "tsc -b && vite build",
+    "predeploy": "pnpm run build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview",
     "start:basic": "vite serve --open ./index.basic.html",
