@@ -31,7 +31,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     selectedCartItems: [],
   });
 
-  const { stockDecrease, getFindProduct } = useProduct();
+  const { stockDecrease, getFindProduct, stockIncrease } = useProduct();
 
   const createCartItem = useCallback((addItem: Product) => {
     setCartState((prev) => ({
@@ -66,27 +66,30 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     [getFindProduct, stockDecrease],
   );
 
-  const decreaseCartItem = useCallback((productId: string) => {
-    const targetCartItem = cartState.selectedCartItems.find(
-      (product) => product.id === productId,
-    );
-    console.log({
-      targetCartItem,
-      productId,
-    });
+  const decreaseCartItem = useCallback(
+    (productId: string) => {
+      const targetCartItem = cartState.selectedCartItems.find(
+        (product) => product.id === productId,
+      );
 
-    if (targetCartItem!.quantity <= 1) {
-      removeCartItem(productId);
-      return;
-    }
+      if (targetCartItem!.quantity <= 1) {
+        removeCartItem(productId);
+        return;
+      }
 
-    setCartState((prev) => ({
-      ...prev,
-      selectedCartItems: prev.selectedCartItems.map((item) =>
-        item.id === productId ? { ...item, quantity: item.quantity - 1 } : item,
-      ),
-    }));
-  }, []);
+      setCartState((prev) => ({
+        ...prev,
+        selectedCartItems: prev.selectedCartItems.map((item) =>
+          item.id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
+        ),
+      }));
+
+      stockIncrease(productId);
+    },
+    [getFindProduct, setCartState, stockIncrease],
+  );
 
   const removeCartItem = useCallback((productId: string) => {
     setCartState((prev) => ({

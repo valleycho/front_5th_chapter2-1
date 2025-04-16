@@ -11,6 +11,7 @@ interface IProductsContext {
   products: Array<Product>;
   getFindProduct: (productId: string) => Product | undefined;
   stockDecrease: (productId: string) => void;
+  stockIncrease: (productId: string) => void;
   stockRecovery: (productId: string, recoveryQuantity: number) => void;
 }
 
@@ -46,6 +47,16 @@ export const ProductsProvider = ({
     );
   }, []);
 
+  const stockIncrease = useCallback((productId: string) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: product.quantity + 1 }
+          : product,
+      ),
+    );
+  }, []);
+
   const stockRecovery = useCallback(
     (productId: string, recoveryQuantity: number) => {
       setProducts((prev) =>
@@ -61,7 +72,13 @@ export const ProductsProvider = ({
 
   return (
     <ProductsContext.Provider
-      value={{ products, getFindProduct, stockDecrease, stockRecovery }}
+      value={{
+        products,
+        getFindProduct,
+        stockDecrease,
+        stockIncrease,
+        stockRecovery,
+      }}
     >
       {children}
     </ProductsContext.Provider>
