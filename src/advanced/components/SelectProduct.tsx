@@ -5,26 +5,18 @@ import { useCart } from '../provider/CartProvider';
 function SelectProduct() {
   const { products, stockDecrease, getFindProduct } = useProduct();
 
-  const { isSelectedProduct, createCartItem, addCartItem } = useCart();
+  const { isSelectedCartItem, createCartItem, addCartItem } = useCart();
   const [selectedItemId, setSelectedItemId] = useState<string>(products[0].id);
 
   const handleAddItemClick = useCallback(() => {
     const addItem = getFindProduct(selectedItemId);
-    const isAvailableQuantity = (addItem?.quantity ?? 0) > 0;
 
     // 선택한 상품이 없는 경우
     if (!addItem) return;
 
-    // 재고가 없는 경우
-    if (!isAvailableQuantity) {
-      alert('재고가 부족합니다.');
-      return;
-    }
-
     // 장바구니에 이미 존재하는 상품인 경우
-    if (isSelectedProduct(selectedItemId)) {
+    if (isSelectedCartItem(selectedItemId)) {
       addCartItem(selectedItemId);
-      stockDecrease(selectedItemId);
       return;
     }
 
@@ -35,10 +27,13 @@ function SelectProduct() {
       price: addItem.price,
       quantity: 1,
     });
-
-    // 재고 감소
-    stockDecrease(selectedItemId);
-  }, [getFindProduct, isSelectedProduct, selectedItemId]);
+  }, [
+    getFindProduct,
+    isSelectedCartItem,
+    selectedItemId,
+    createCartItem,
+    addCartItem,
+  ]);
 
   return (
     <>
