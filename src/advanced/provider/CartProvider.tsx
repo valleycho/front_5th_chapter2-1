@@ -19,6 +19,8 @@ interface ICartContext {
   addCartItem: (productId: string) => void;
   decreaseCartItem: (productId: string) => void;
   removeCartItem: (targetProduct: Product) => void;
+  selectedItemId: string;
+  setSelectedItemId: (productId: string) => void;
 }
 
 const CartContext = createContext<ICartContext | undefined>(undefined);
@@ -30,6 +32,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     cartTotalPrice: 0,
     selectedCartItems: [],
   });
+  const [selectedItemId, setSelectedItemId] = useState<string>('p1');
 
   const { stockDecrease, getFindProduct, stockIncrease } = useProduct();
 
@@ -162,6 +165,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         addCartItem,
         decreaseCartItem,
         removeCartItem,
+        selectedItemId,
+        setSelectedItemId,
       }}
     >
       {children}

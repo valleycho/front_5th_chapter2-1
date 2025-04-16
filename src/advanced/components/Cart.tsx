@@ -1,6 +1,7 @@
 import { useProduct } from '../provider/ProductProvider';
 import CartItems from './CartItems';
 import CartTotal from './CartTotal';
+import Sale from './Sale';
 import SelectProduct from './SelectProduct';
 import StockQuantityStatus from './StockQuantityStatus';
 
@@ -18,6 +19,8 @@ function Cart() {
         {products.map((product, idx) => (
           <StockQuantityStatus key={idx} product={product} />
         ))}
+
+        <Sale />
       </div>
     </div>
   );
