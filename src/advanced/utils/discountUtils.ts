@@ -1,11 +1,9 @@
-import { Product } from "../provider/ProductProvider";
-
-export function getDiscountRate(targetCartItem: Product, cartTotalPrice: number, subTotalPrice: number): number {
-  if (targetCartItem.quantity + 1 >= 10) {
-    return getProductDiscountRate(targetCartItem.id);
+export function getDiscountRate(quantity: number, cartItemId: string, cartTotalPrice: number, subTotalPrice: number): number {
+  if (quantity >= 10) {
+    return getProductDiscountRate(cartItemId);
   }
 
-  if (targetCartItem.quantity + 1 >= 30) {
+  if (quantity >= 30) {
     return getBulkDiscountRate(cartTotalPrice, subTotalPrice);
   }
 

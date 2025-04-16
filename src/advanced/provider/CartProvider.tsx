@@ -61,7 +61,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       let subTotalPrice =
         (targetCartItem?.price ?? 0) * (targetCartItem?.quantity ?? 0);
       const discountRate = getDiscountRate(
-        targetCartItem!,
+        targetCartItem!.quantity + 1,
+        targetCartItem!.id,
         cartState.cartTotalPrice,
         subTotalPrice,
       );
@@ -70,8 +71,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         ...prev,
         discountRate,
         cartItemTotalQuantity: prev.cartItemTotalQuantity + 1,
-        cartTotalPrice:
-          prev.cartTotalPrice + targetProduct!.price * (1 - discountRate),
+        cartTotalPrice: prev.selectedCartItems.reduce((prev, next) => {
+          return prev + next.price * (next.quantity + 1) * (1 - discountRate);
+        }, 0),
         selectedCartItems: prev.selectedCartItems.map((item) =>
           item.id === productId
             ? { ...item, quantity: item.quantity + 1 }
@@ -98,7 +100,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       let subTotalPrice =
         (targetCartItem?.price ?? 0) * (targetCartItem?.quantity ?? 0);
       const discountRate = getDiscountRate(
-        targetCartItem!,
+        targetCartItem!.quantity - 1,
+        targetCartItem!.id,
         cartState.cartTotalPrice,
         subTotalPrice,
       );
@@ -107,8 +110,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         ...prev,
         discountRate,
         cartItemTotalQuantity: prev.cartItemTotalQuantity - 1,
-        cartTotalPrice:
-          prev.cartTotalPrice - targetCartItem!.price * (1 - discountRate),
+        cartTotalPrice: prev.selectedCartItems.reduce((prev, next) => {
+          return prev + next.price * (next.quantity - 1) * (1 - discountRate);
+        }, 0),
         selectedCartItems: prev.selectedCartItems.map((item) =>
           item.id === productId
             ? { ...item, quantity: item.quantity - 1 }
