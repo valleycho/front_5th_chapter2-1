@@ -14,7 +14,7 @@ function CartItems() {
       );
 
       if (targetProduct) {
-        removeCartItem(productId);
+        removeCartItem(targetProduct);
         stockRecovery(productId, targetProduct.quantity);
       }
     },
