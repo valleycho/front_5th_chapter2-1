@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 export interface Product {
   id: string;
@@ -7,7 +7,13 @@ export interface Product {
   quantity: number;
 }
 
-const ProductsContext = createContext<Product[] | undefined>(undefined);
+interface IProductsContext {
+  products: Array<Product>;
+  getFindProduct: (productId: string) => Product | undefined;
+  stockDecrease: (productId: string) => void;
+}
+
+const ProductsContext = createContext<IProductsContext | undefined>(undefined);
 
 export const ProductsProvider = ({
   children,
@@ -22,17 +28,36 @@ export const ProductsProvider = ({
     { id: 'p5', name: '상품5', price: 25000, quantity: 10 },
   ]);
 
+  const getFindProduct = useCallback(
+    (productId: string) => {
+      return products.find((product) => product.id === productId);
+    },
+    [products],
+  );
+
+  const stockDecrease = useCallback((productId: string) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: product.quantity - 1 }
+          : product,
+      ),
+    );
+  }, []);
+
   return (
-    <ProductsContext.Provider value={products}>
+    <ProductsContext.Provider
+      value={{ products, getFindProduct, stockDecrease }}
+    >
       {children}
     </ProductsContext.Provider>
   );
 };
 
-export const useProducts = () => {
+export const useProduct = () => {
   const context = useContext(ProductsContext);
   if (!context) {
-    throw new Error('useProducts must be used within a ProductsProvider');
+    throw new Error('useProduct must be used within a ProductsProvider');
   }
   return context;
 };

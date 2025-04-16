@@ -1,12 +1,11 @@
-import { useProducts } from '../provider/ProductProvider';
-import AddCartButton from './AddCartButton';
+import { useProduct } from '../provider/ProductProvider';
 import CartItems from './CartItems';
 import CartTotal from './CartTotal';
 import SelectProduct from './SelectProduct';
 import StockQuantityStatus from './StockQuantityStatus';
 
 function Cart() {
-  const products = useProducts();
+  const { products } = useProduct();
 
   return (
     <div className="bg-gray-100 p-8">
@@ -14,8 +13,7 @@ function Cart() {
         <h1 className="text-2xl font-bold mb-4">장바구니</h1>
         <CartItems />
         <CartTotal />
-        <SelectProduct products={products} />
-        <AddCartButton />
+        <SelectProduct />
 
         {products.map((product, idx) => (
           <StockQuantityStatus key={idx} product={product} />

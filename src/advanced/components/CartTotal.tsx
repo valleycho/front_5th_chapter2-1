@@ -1,7 +1,7 @@
 import { useCart } from '../provider/CartProvider';
 
 function CartTotal() {
-  const cartState = useCart();
+  const { cartState } = useCart();
 
   return (
     <div id="cart-total" className="text-xl font-bold my-4">
