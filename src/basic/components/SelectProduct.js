@@ -1,5 +1,5 @@
-import { productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
+import { productStore } from '../store';
 
 export const selectProduct = {
   $element: null,
@@ -20,7 +20,7 @@ export const selectProduct = {
   updateOptionElement() {
     this.$element.innerHTML = '';
 
-    const products = productState.getProducts();
+    const products = productStore.getProducts();
 
     products.forEach((product) => {
       const optionElement = createElement('option', {

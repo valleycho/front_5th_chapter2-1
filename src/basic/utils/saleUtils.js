@@ -1,6 +1,6 @@
 import { minute, tenSecond, thirtySecond, twentySecond, randomNumber } from '.';
-import { productState, selectedProductState } from './productUtils';
 import { selectProduct } from '../components';
+import { productStore, cartStore } from '../store';
 
 // 번개세일
 export function flashSale() {
@@ -10,7 +10,7 @@ export function flashSale() {
 
   setTimeout(() => {
     setInterval(() => {
-      const products = productState.getProducts();
+      const products = productStore.getProducts();
       const flashSaleItem =
         products[Math.floor(randomNumber * products.length)];
 
@@ -36,8 +36,8 @@ export function recommendSale() {
 
   setTimeout(() => {
     setInterval(() => {
-      const products = productState.getProducts();
-      const selectedProduct = selectedProductState.selectedProduct;
+      const products = productStore.getProducts();
+      const selectedProduct = cartStore.getSelectedProduct();
 
       if (selectedProduct) {
         const recommendSaleProduct = products.find((product) => {

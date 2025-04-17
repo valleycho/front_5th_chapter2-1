@@ -3,11 +3,12 @@ import {
   renderUpdatePoint,
   stockQuantityStatus,
 } from '../components';
-import { createElement, productState } from '.';
+import { createElement } from '.';
 import { cartItems } from '../components/CartItems';
+import { productStore } from '../store';
 
 function calculateCartTotal(cartState) {
-  const products = productState.getProducts();
+  const products = productStore.getProducts();
 
   let cartItemsChildrenElement = cartItems.getElement().children;
 

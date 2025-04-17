@@ -1,5 +1,6 @@
 import { createElement } from '../utils/elementUtils';
-import { productState, updateCart } from '../utils';
+import { updateCart } from '../utils';
+import { productStore } from '../store';
 
 export const cartItems = {
   $element: null,
@@ -76,7 +77,7 @@ export const cartItems = {
   handleCartItemsClick(event) {
     const eventTarget = event.target;
     const targetProductId = eventTarget.dataset.productId;
-    const targetProduct = productState.getFindProduct(targetProductId);
+    const targetProduct = productStore.getFindProduct(targetProductId);
     const targetProductElement = document.getElementById(targetProductId);
 
     if (eventTarget.classList.contains('quantity-change')) {

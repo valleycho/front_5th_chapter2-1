@@ -1,4 +1,4 @@
-export const productState = {
+export const productStore = {
   products: [
     { id: 'p1', name: '상품1', price: 10000, quantity: 50 },
     { id: 'p2', name: '상품2', price: 20000, quantity: 30 },
@@ -11,12 +11,5 @@ export const productState = {
   },
   getFindProduct(productId) {
     return this.products.find((product) => product.id === productId);
-  },
-};
-
-export const selectedProductState = {
-  selectedProduct: undefined,
-  setSelectedProduct(selectedProduct) {
-    this.selectedProduct = selectedProduct;
   },
 };

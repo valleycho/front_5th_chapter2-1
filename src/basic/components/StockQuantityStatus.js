@@ -1,5 +1,5 @@
-import { productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
+import { productStore } from '../store';
 
 export const stockQuantityStatus = {
   $element: null,
@@ -16,7 +16,7 @@ export const stockQuantityStatus = {
     return this.$element;
   },
   updateStockStatus() {
-    const products = productState.getProducts();
+    const products = productStore.getProducts();
     let stockStatusMessage = '';
     const limitStockQuantity = 5;
 

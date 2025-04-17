@@ -1,6 +1,7 @@
-import { selectedProductState, updateCart, productState } from '../utils';
+import { updateCart } from '../utils';
 import { createElement } from '../utils/elementUtils';
 import { selectProduct, cartItems } from '../components';
+import { productStore, cartStore } from '../store';
 
 export const addCartButton = {
   $element: null,
@@ -24,7 +25,7 @@ export const addCartButton = {
   handleAddCartButtonClick() {
     const selectedItem = selectProduct.getElement().value;
 
-    const addItem = productState.getFindProduct(selectedItem);
+    const addItem = productStore.getFindProduct(selectedItem);
 
     const isAvailableQuantity = (addItem?.quantity ?? 0) > 0;
     if (!isAvailableQuantity) {
@@ -50,6 +51,6 @@ export const addCartButton = {
 
     updateCart();
 
-    selectedProductState.setSelectedProduct(selectedItem);
+    cartStore.setSelectedProduct(selectedItem);
   },
 };
