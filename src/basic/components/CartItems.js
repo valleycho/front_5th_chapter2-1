@@ -43,30 +43,32 @@ export const cartItems = {
     targetProductElement.remove();
   },
   changeCartItemQuantity(eventTarget, targetProductElement, targetProduct) {
-    var qtyChange = parseInt(eventTarget.dataset.change);
-    var newQty =
+    let quantityChange = parseInt(eventTarget.dataset.change);
+    let currentCartItemQuantity =
       parseInt(
         targetProductElement.querySelector('span').textContent.split('x ')[1],
-      ) + qtyChange;
+      ) + quantityChange;
 
-    if (
-      newQty > 0 &&
-      newQty <=
+    const isAvailableProduct =
+      currentCartItemQuantity > 0 &&
+      currentCartItemQuantity <=
         targetProduct.quantity +
           parseInt(
             targetProductElement
               .querySelector('span')
               .textContent.split('x ')[1],
-          )
-    ) {
+          );
+
+    if (isAvailableProduct) {
       targetProductElement.querySelector('span').textContent =
         targetProductElement.querySelector('span').textContent.split('x ')[0] +
         'x ' +
-        newQty;
-      targetProduct.quantity -= qtyChange;
-    } else if (newQty <= 0) {
+        currentCartItemQuantity;
+
+      targetProduct.quantity -= quantityChange;
+    } else if (currentCartItemQuantity <= 0) {
       targetProductElement.remove();
-      targetProduct.quantity -= qtyChange;
+      targetProduct.quantity -= quantityChange;
     } else {
       alert('재고가 부족합니다.');
     }

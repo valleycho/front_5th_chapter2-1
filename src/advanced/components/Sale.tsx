@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { minute, randomNumber, thirtySecond, twentySecond } from '../utils';
+import { minute, randomNumber, thirtySecond } from '../utils';
 import { useProduct } from '../provider/ProductProvider';
 import { useCart } from '../provider/CartProvider';
 
 function Sale() {
   const { products } = useProduct();
-  const { cartState, selectedItemId } = useCart();
+  const { selectedItemId } = useCart();
 
   const flashSale = () => {
     const discountRate = 0.8;
