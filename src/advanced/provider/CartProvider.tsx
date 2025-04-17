@@ -61,32 +61,43 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      let subTotalPrice =
-        (targetCartItem?.price ?? 0) * (targetCartItem?.quantity ?? 0);
+      const updatedQuantity = (targetCartItem?.quantity ?? 0) + 1;
       const discountRate = getDiscountRate(
-        targetCartItem!.quantity + 1,
+        updatedQuantity,
         targetCartItem!.id,
         cartState.cartTotalPrice,
-        subTotalPrice,
+        targetCartItem!.price * updatedQuantity,
       );
 
-      setCartState((prev) => ({
-        ...prev,
-        discountRate,
-        cartItemTotalQuantity: prev.cartItemTotalQuantity + 1,
-        cartTotalPrice: prev.selectedCartItems.reduce((prev, next) => {
-          return prev + next.price * (next.quantity + 1) * (1 - discountRate);
-        }, 0),
-        selectedCartItems: prev.selectedCartItems.map((item) =>
+      setCartState((prev) => {
+        const updatedItems = prev.selectedCartItems.map((item) =>
           item.id === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item,
-        ),
-      }));
+        );
+
+        const newTotalPrice = updatedItems.reduce((total, item) => {
+          const itemDiscountRate = getDiscountRate(
+            item.quantity,
+            item.id,
+            total,
+            item.price * item.quantity,
+          );
+          return total + item.price * item.quantity * (1 - itemDiscountRate);
+        }, 0);
+
+        return {
+          ...prev,
+          discountRate,
+          cartItemTotalQuantity: prev.cartItemTotalQuantity + 1,
+          cartTotalPrice: newTotalPrice,
+          selectedCartItems: updatedItems,
+        };
+      });
 
       stockDecrease(productId);
     },
-    [getFindProduct, stockDecrease, getProductDiscountRate],
+    [getFindProduct, stockDecrease],
   );
 
   const decreaseCartItem = useCallback(
@@ -100,52 +111,70 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      let subTotalPrice =
-        (targetCartItem?.price ?? 0) * (targetCartItem?.quantity ?? 0);
+      const updatedQuantity = targetCartItem!.quantity - 1;
       const discountRate = getDiscountRate(
-        targetCartItem!.quantity - 1,
+        updatedQuantity,
         targetCartItem!.id,
         cartState.cartTotalPrice,
-        subTotalPrice,
+        targetCartItem!.price * updatedQuantity,
       );
 
-      setCartState((prev) => ({
-        ...prev,
-        discountRate,
-        cartItemTotalQuantity: prev.cartItemTotalQuantity - 1,
-        cartTotalPrice: prev.selectedCartItems.reduce((prev, next) => {
-          return prev + next.price * (next.quantity - 1) * (1 - discountRate);
-        }, 0),
-        selectedCartItems: prev.selectedCartItems.map((item) =>
+      setCartState((prev) => {
+        const updatedItems = prev.selectedCartItems.map((item) =>
           item.id === productId
             ? { ...item, quantity: item.quantity - 1 }
             : item,
-        ),
-      }));
+        );
+
+        const newTotalPrice = updatedItems.reduce((total, item) => {
+          const itemDiscountRate = getDiscountRate(
+            item.quantity,
+            item.id,
+            total,
+            item.price * item.quantity,
+          );
+          return total + item.price * item.quantity * (1 - itemDiscountRate);
+        }, 0);
+
+        return {
+          ...prev,
+          discountRate,
+          cartItemTotalQuantity: prev.cartItemTotalQuantity - 1,
+          cartTotalPrice: newTotalPrice,
+          selectedCartItems: updatedItems,
+        };
+      });
 
       stockIncrease(productId);
     },
-    [getFindProduct, setCartState, stockIncrease],
+    [getFindProduct, stockIncrease],
   );
 
-  const removeCartItem = useCallback(
-    (targetProduct: Product) => {
-      console.log({
-        targetProduct,
-      });
-      setCartState((prev) => ({
+  const removeCartItem = useCallback((targetProduct: Product) => {
+    setCartState((prev) => {
+      const updatedItems = prev.selectedCartItems.filter(
+        (item) => item.id !== targetProduct.id,
+      );
+
+      const newTotalPrice = updatedItems.reduce((total, item) => {
+        const itemDiscountRate = getDiscountRate(
+          item.quantity,
+          item.id,
+          total,
+          item.price * item.quantity,
+        );
+        return total + item.price * item.quantity * (1 - itemDiscountRate);
+      }, 0);
+
+      return {
         ...prev,
         cartItemTotalQuantity:
           prev.cartItemTotalQuantity - targetProduct.quantity,
-        cartTotalPrice:
-          prev.cartTotalPrice - targetProduct.price * targetProduct.quantity,
-        selectedCartItems: prev.selectedCartItems.filter(
-          (item) => item.id !== targetProduct.id,
-        ),
-      }));
-    },
-    [setCartState],
-  );
+        cartTotalPrice: newTotalPrice,
+        selectedCartItems: updatedItems,
+      };
+    });
+  }, []);
 
   const isSelectedCartItem = useCallback(
     (productId: string) => {
