@@ -1,15 +1,11 @@
+import { cartStore } from '../store';
+
 export function getProductDiscountRate(productId) {
-  if (productId === 'p1') {
-    return 0.1;
-  } else if (productId === 'p2') {
-    return 0.15;
-  } else if (productId === 'p3') {
-    return 0.2;
-  } else if (productId === 'p4') {
-    return 0.05;
-  } else if (productId === 'p5') {
-    return 0.25;
-  }
+  if (productId === 'p1') return 0.1;
+  if (productId === 'p2') return 0.15;
+  if (productId === 'p3') return 0.2;
+  if (productId === 'p4') return 0.05;
+  if (productId === 'p5') return 0.25;
 
   return 0;
 }
@@ -18,22 +14,26 @@ export function getBulkDiscountRate(cartState) {
   const minQuantityForBulkDiscount = 30;
   const twentyFivePercentDiscountRate = 0.25;
 
-  if (cartState.cartItemQuantity >= minQuantityForBulkDiscount) {
+  if (cartState.itemQuantity >= minQuantityForBulkDiscount) {
     const bulkDiscountAmount =
-      cartState.cartTotalAmount * twentyFivePercentDiscountRate;
-    const itemDiscountAmount = cartState.subTot - cartState.cartTotalAmount;
+      cartState.totalPrice * twentyFivePercentDiscountRate;
+    const itemDiscountAmount = cartState.subTotalPrice - cartState.totalPrice;
 
     if (bulkDiscountAmount > itemDiscountAmount) {
-      cartState.cartTotalAmount =
-        cartState.subTot * (1 - twentyFivePercentDiscountRate);
-      cartState.discountRate = twentyFivePercentDiscountRate;
+      cartState.totalPrice =
+        cartState.subTotalPrice * (1 - twentyFivePercentDiscountRate);
+      cartStore.setDiscountRate(twentyFivePercentDiscountRate);
     } else {
-      cartState.discountRate =
-        (cartState.subTot - cartState.cartTotalAmount) / cartState.subTot;
+      cartState.setDiscountRate(
+        (cartState.subTotalPrice - cartState.totalPrice) /
+          cartState.subTotalPrice,
+      );
     }
   } else {
-    cartState.discountRate =
-      (cartState.subTot - cartState.cartTotalAmount) / cartState.subTot;
+    cartStore.setDiscountRate(
+      (cartState.subTotalPrice - cartState.totalPrice) /
+        cartState.subTotalPrice,
+    );
   }
 }
 
@@ -42,10 +42,9 @@ export function getSpecialDiscountRate(cartState) {
   const tenPercentDiscountRate = 0.1;
 
   if (isSpecialDiscountDay) {
-    cartState.cartTotalAmount *= 1 - tenPercentDiscountRate;
-    cartState.discountRate = Math.max(
-      cartState.discountRate,
-      tenPercentDiscountRate,
+    cartState.totalPrice *= 1 - tenPercentDiscountRate;
+    cartStore.setDiscountRate(
+      Math.max(cartStore.getDiscountRate(), tenPercentDiscountRate),
     );
   }
 }

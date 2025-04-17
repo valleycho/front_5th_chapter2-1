@@ -1,5 +1,5 @@
 import { createElement } from '../utils/elementUtils';
-import { productStore } from '../store';
+import { productStore, cartStore } from '../store';
 import { cartItems } from './CartItems';
 import { getProductDiscountRate } from '../utils';
 
@@ -21,7 +21,8 @@ export const cartTotal = {
   updateCartTotal(cartTotalPrice) {
     this.$element.textContent = `총액: ${cartTotalPrice}원`;
   },
-  updateCartDiscount(discountRate) {
+  updateCartDiscount() {
+    const discountRate = cartStore.getDiscountRate();
     const discountedRate = (discountRate * 100).toFixed(1);
 
     const discountElement = createElement('span', {
@@ -77,9 +78,9 @@ export const cartTotal = {
         discountRate = getProductDiscountRate(currentProduct.id);
       }
 
-      cartState.cartItemQuantity += quantity;
-      cartState.subTot += itemTotalPrice;
-      cartState.cartTotalAmount += itemTotalPrice * (1 - discountRate);
+      cartState.itemQuantity += quantity;
+      cartState.subTotalPrice += itemTotalPrice;
+      cartState.totalPrice += itemTotalPrice * (1 - discountRate);
     }
   },
 };

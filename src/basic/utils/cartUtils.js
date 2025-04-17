@@ -1,12 +1,12 @@
 import { cartTotal, stockQuantityStatus } from '../components';
 import { getBulkDiscountRate, getSpecialDiscountRate } from './discountUtils';
+import { cartStore } from '../store';
 
 export function updateCart() {
   const cartState = {
-    discountRate: 0,
-    cartItemQuantity: 0,
-    cartTotalAmount: 0,
-    subTot: 0,
+    itemQuantity: 0,
+    totalPrice: 0,
+    subTotalPrice: 0,
   };
 
   cartTotal.calculateCartTotal(cartState);
@@ -14,13 +14,13 @@ export function updateCart() {
   getBulkDiscountRate(cartState);
   getSpecialDiscountRate(cartState);
 
-  cartTotal.updateCartTotal(cartState.cartTotalAmount);
+  cartTotal.updateCartTotal(cartState.totalPrice);
 
-  if (cartState.discountRate > 0) {
-    cartTotal.updateCartDiscount(cartState.discountRate);
+  if (cartStore.getDiscountRate() > 0) {
+    cartTotal.updateCartDiscount();
   }
 
   stockQuantityStatus.updateStockStatus();
 
-  cartTotal.updateCartPoint(cartState.cartTotalAmount);
+  cartTotal.updateCartPoint(cartState.totalPrice);
 }
