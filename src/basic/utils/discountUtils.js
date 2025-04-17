@@ -10,39 +10,50 @@ export function getProductDiscountRate(productId) {
   return 0;
 }
 
-export function getBulkDiscountRate(cartState) {
+export function getBulkDiscountRate() {
   const minQuantityForBulkDiscount = 30;
   const twentyFivePercentDiscountRate = 0.25;
 
-  if (cartState.itemQuantity >= minQuantityForBulkDiscount) {
+  if (cartStore.getState().itemQuantity >= minQuantityForBulkDiscount) {
     const bulkDiscountAmount =
-      cartState.totalPrice * twentyFivePercentDiscountRate;
-    const itemDiscountAmount = cartState.subTotalPrice - cartState.totalPrice;
+      cartStore.getState().totalPrice * twentyFivePercentDiscountRate;
+    const itemDiscountAmount =
+      cartStore.getState().subTotalPrice - cartStore.getState().totalPrice;
 
     if (bulkDiscountAmount > itemDiscountAmount) {
-      cartState.totalPrice =
-        cartState.subTotalPrice * (1 - twentyFivePercentDiscountRate);
+      cartStore.setState({
+        ...cartStore.getState(),
+        totalPrice:
+          cartStore.getState().subTotalPrice *
+          (1 - twentyFivePercentDiscountRate),
+      });
+
       cartStore.setDiscountRate(twentyFivePercentDiscountRate);
     } else {
-      cartState.setDiscountRate(
-        (cartState.subTotalPrice - cartState.totalPrice) /
-          cartState.subTotalPrice,
+      cartStore.setDiscountRate(
+        (cartStore.getState().subTotalPrice - cartStore.getState().totalPrice) /
+          cartStore.getState().subTotalPrice,
       );
     }
   } else {
     cartStore.setDiscountRate(
-      (cartState.subTotalPrice - cartState.totalPrice) /
-        cartState.subTotalPrice,
+      (cartStore.getState().subTotalPrice - cartStore.getState().totalPrice) /
+        cartStore.getState().subTotalPrice,
     );
   }
 }
 
-export function getSpecialDiscountRate(cartState) {
+export function getSpecialDiscountRate() {
   const isSpecialDiscountDay = new Date().getDay() === 2;
   const tenPercentDiscountRate = 0.1;
 
   if (isSpecialDiscountDay) {
-    cartState.totalPrice *= 1 - tenPercentDiscountRate;
+    cartStore.setState({
+      ...cartStore.getState(),
+      totalPrice:
+        cartStore.getState().totalPrice * (1 - tenPercentDiscountRate),
+    });
+
     cartStore.setDiscountRate(
       Math.max(cartStore.getDiscountRate(), tenPercentDiscountRate),
     );

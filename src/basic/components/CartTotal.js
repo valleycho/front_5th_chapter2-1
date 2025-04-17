@@ -18,8 +18,8 @@ export const cartTotal = {
   getElement() {
     return this.$element;
   },
-  updateCartTotal(cartTotalPrice) {
-    this.$element.textContent = `총액: ${cartTotalPrice}원`;
+  updateCartTotal() {
+    this.$element.textContent = `총액: ${cartStore.getState().totalPrice}원`;
   },
   updateCartDiscount() {
     const discountRate = cartStore.getDiscountRate();
@@ -32,8 +32,8 @@ export const cartTotal = {
 
     this.$element.appendChild(discountElement);
   },
-  updateCartPoint(cartTotalAmount) {
-    const point = Math.floor(cartTotalAmount / 1000);
+  updateCartPoint() {
+    const point = Math.floor(cartStore.getState().totalPrice / 1000);
 
     let pointElement = document.getElementById('loyalty-points');
     if (!pointElement) {
@@ -47,7 +47,7 @@ export const cartTotal = {
 
     pointElement.textContent = `(포인트: ${point})`;
   },
-  calculateCartTotal(cartState) {
+  calculateCartTotal() {
     const products = productStore.getProducts();
 
     let cartItemsChildrenElement = cartItems.getElement().children;
@@ -78,9 +78,12 @@ export const cartTotal = {
         discountRate = getProductDiscountRate(currentProduct.id);
       }
 
-      cartState.itemQuantity += quantity;
-      cartState.subTotalPrice += itemTotalPrice;
-      cartState.totalPrice += itemTotalPrice * (1 - discountRate);
+      cartStore.setState({
+        itemQuantity: cartStore.getState().itemQuantity + quantity,
+        subTotalPrice: cartStore.getState().subTotalPrice + itemTotalPrice,
+        totalPrice:
+          cartStore.getState().totalPrice + itemTotalPrice * (1 - discountRate),
+      });
     }
   },
 };
