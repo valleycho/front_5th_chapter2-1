@@ -3,7 +3,7 @@ import { useProduct } from '../provider/ProductProvider';
 import { useCart } from '../provider/CartProvider';
 
 function SelectProduct() {
-  const { products, stockDecrease, getFindProduct } = useProduct();
+  const { products, getFindProduct } = useProduct();
 
   const { isSelectedCartItem, createCartItem, addCartItem } = useCart();
   const [selectedItemId, setSelectedItemId] = useState<string>(products[0].id);

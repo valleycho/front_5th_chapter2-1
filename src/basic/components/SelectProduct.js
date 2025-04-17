@@ -1,26 +1,38 @@
 import { productState } from '../utils';
 import { createElement } from '../utils/elementUtils';
 
-export const selectProductElement = createElement('select', {
-  id: 'product-select',
-  className: 'border rounded p-2 mr-2',
-});
-
-export const updateOptionElement = () => {
-  selectProductElement.innerHTML = '';
-
-  const products = productState.getProducts();
-
-  products.forEach((product) => {
-    const optionElement = createElement('option', {
-      value: product.id,
-      textContent: `${product.name} - ${product.price}원`,
+export const selectProduct = {
+  $element: null,
+  render() {
+    const selectProductElement = createElement('select', {
+      id: 'product-select',
+      className: 'border rounded p-2 mr-2',
     });
 
-    if (product.quantity === 0) {
-      optionElement.disabled = true;
-    }
+    this.$element = selectProductElement;
+    this.updateOptionElement();
 
-    selectProductElement.appendChild(optionElement);
-  });
+    return this.$element;
+  },
+  getElement() {
+    return this.$element;
+  },
+  updateOptionElement() {
+    this.$element.innerHTML = '';
+
+    const products = productState.getProducts();
+
+    products.forEach((product) => {
+      const optionElement = createElement('option', {
+        value: product.id,
+        textContent: `${product.name} - ${product.price}원`,
+      });
+
+      if (product.quantity === 0) {
+        optionElement.disabled = true;
+      }
+
+      this.$element.appendChild(optionElement);
+    });
+  },
 };

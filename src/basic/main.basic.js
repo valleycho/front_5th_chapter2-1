@@ -1,13 +1,8 @@
-import { saleInit, eventInit, updateCart, renderInit } from './utils';
-
-function initApp() {
-  renderInit();
-  eventInit();
-  saleInit();
-}
+import { saleInit, updateCart, renderInit } from './utils';
 
 function main() {
-  initApp();
+  renderInit();
+  saleInit();
 
   updateCart();
 }

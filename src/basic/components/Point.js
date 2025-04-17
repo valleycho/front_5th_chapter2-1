@@ -1,5 +1,5 @@
 import { createElement } from '../utils';
-import { cartTotalElement } from './Cart';
+import { cartTotal } from './CartTotal';
 
 export const renderUpdatePoint = (point, cartTotalAmount) => {
   point = Math.floor(cartTotalAmount / 1000);
@@ -12,7 +12,7 @@ export const renderUpdatePoint = (point, cartTotalAmount) => {
       className: 'text-blue-500 ml-2',
     });
 
-    cartTotalElement.appendChild(pointElement);
+    cartTotal.getElement().appendChild(pointElement);
   }
 
   pointElement.textContent = `(포인트: ${point})`;

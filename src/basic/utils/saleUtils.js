@@ -1,6 +1,6 @@
 import { minute, tenSecond, thirtySecond, twentySecond, randomNumber } from '.';
 import { productState, selectedProductState } from './productUtils';
-import { updateOptionElement } from '../components';
+import { selectProduct } from '../components';
 
 // 번개세일
 export function flashSale() {
@@ -23,7 +23,7 @@ export function flashSale() {
 
         alert(`번개세일! ${flashSaleItem.name}이(가) 20% 할인 중입니다!`);
 
-        updateOptionElement();
+        selectProduct.updateOptionElement();
       }
     }, thirtySecond);
   }, randomNumber * tenSecond);
@@ -56,7 +56,7 @@ export function recommendSale() {
           );
           recommendSaleProduct.price = saledPrice;
 
-          updateOptionElement();
+          selectedProduct.updateOptionElement();
         }
       }
     }, minute);

@@ -2,12 +2,11 @@ import {
   cartWrapperElement,
   cartContentElement,
   cartText,
-  cartItemsElement,
-  cartTotalElement,
-  selectProductElement,
-  updateOptionElement,
-  addCartButtonElement,
-  stockQuantityStatusElement,
+  cartTotal,
+  selectProduct,
+  addCartButton,
+  stockQuantityStatus,
+  cartItems,
 } from '../components';
 
 export function renderInit() {
@@ -15,15 +14,14 @@ export function renderInit() {
 
   const cartChildren = [
     cartText,
-    cartItemsElement,
-    cartTotalElement,
-    selectProductElement,
-    addCartButtonElement,
-    stockQuantityStatusElement,
+    cartItems.render(),
+    cartTotal.render(),
+    selectProduct.render(),
+    addCartButton.render(),
+    stockQuantityStatus.render(),
   ];
 
   cartContentElement.append(...cartChildren);
-  updateOptionElement();
   cartWrapperElement.appendChild(cartContentElement);
 
   rootElement.appendChild(cartWrapperElement);

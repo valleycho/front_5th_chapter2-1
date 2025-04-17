@@ -1,15 +1,15 @@
 import {
-  cartItemsElement,
-  cartTotalElement,
+  cartTotal,
   renderUpdatePoint,
-  updateStockStatus,
+  stockQuantityStatus,
 } from '../components';
 import { createElement, productState } from '.';
+import { cartItems } from '../components/CartItems';
 
 function calculateCartTotal(cartState) {
   const products = productState.getProducts();
 
-  let cartItemsChildrenElement = cartItemsElement.children;
+  let cartItemsChildrenElement = cartItems.getElement().children;
 
   for (let i = 0; i < cartItemsChildrenElement.length; i++) {
     let currentProduct;
@@ -96,10 +96,6 @@ function specialDiscount(cartState) {
   }
 }
 
-function updateTotalPrice(cartState) {
-  cartTotalElement.textContent = `총액: ${Math.round(cartState.cartTotalAmount)}원`;
-}
-
 function updateCartDiscount(discountRate) {
   const discountedRate = (discountRate * 100).toFixed(1);
 
@@ -108,7 +104,7 @@ function updateCartDiscount(discountRate) {
     textContent: `(${discountedRate}% 할인 적용)`,
   });
 
-  cartTotalElement.appendChild(discountElement);
+  cartTotal.getElement().appendChild(discountElement);
 }
 
 export function updateCart() {
@@ -126,13 +122,13 @@ export function updateCart() {
 
   specialDiscount(cartState);
 
-  updateTotalPrice(cartState);
+  cartTotal.updateCartTotal(cartState.cartTotalAmount);
 
   if (cartState.discountRate > 0) {
     updateCartDiscount(cartState.discountRate);
   }
 
-  updateStockStatus();
+  stockQuantityStatus.updateStockStatus();
 
   renderUpdatePoint(point, cartState.cartTotalAmount);
 }
