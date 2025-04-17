@@ -17,7 +17,6 @@ function SelectProduct() {
     // 장바구니에 이미 존재하는 상품인 경우
     if (isSelectedCartItem(selectedItemId)) {
       addCartItem(selectedItemId);
-      setSelectedItemId(products[0].id);
       return;
     }
 
@@ -28,11 +27,10 @@ function SelectProduct() {
       price: addItem.price,
       quantity: 1,
     });
-    setSelectedItemId(products[0].id);
   }, [
     getFindProduct,
-    isSelectedCartItem,
     selectedItemId,
+    isSelectedCartItem,
     createCartItem,
     addCartItem,
   ]);
@@ -42,6 +40,7 @@ function SelectProduct() {
       <select
         id="product-select"
         className="border rounded p-2 mr-2"
+        value={selectedItemId}
         onChange={(e) => setSelectedItemId(e.target.value)}
       >
         {products.map((product) => (
