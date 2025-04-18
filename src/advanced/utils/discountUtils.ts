@@ -1,10 +1,10 @@
-export function getDiscountRate(quantity: number, cartItemId: string, cartTotalPrice: number, subTotalPrice: number): number {
-  if (quantity >= 10) {
-    return getProductDiscountRate(cartItemId);
+export function getDiscountRate(quantity: number, cartItemId: string): number {
+  if (quantity >= 30) {
+    return 0.25;
   }
 
-  if (quantity >= 30) {
-    return getBulkDiscountRate(cartTotalPrice, subTotalPrice);
+  if (quantity >= 10) {
+    return getProductDiscountRate(cartItemId);
   }
 
   return 0;
@@ -19,15 +19,4 @@ export function getProductDiscountRate(productId: string) {
   if (productId === 'p5') return 0.25;
 
   return 0;
-}
-
-export function getBulkDiscountRate(cartItemTotalPrice: number, subTotalPrice: number): number {
-  const bulkDiscountPrice = cartItemTotalPrice * 0.25;
-  const itemDiscountPrice = subTotalPrice - cartItemTotalPrice;
-
-  if (bulkDiscountPrice > itemDiscountPrice) {
-    return 0.25;
-  }
-
-  return (subTotalPrice - cartItemTotalPrice) / subTotalPrice;
 }

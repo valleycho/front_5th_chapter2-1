@@ -1,9 +1,6 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { Product, useProduct } from './ProductProvider';
-import {
-  getDiscountRate,
-  getProductDiscountRate,
-} from '../utils/discountUtils';
+import { getDiscountRate } from '../utils/discountUtils';
 
 interface Cart {
   discountRate: number;
@@ -36,16 +33,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const { stockDecrease, getFindProduct, stockIncrease } = useProduct();
 
-  const createCartItem = useCallback((addItem: Product) => {
-    setCartState((prev) => ({
-      ...prev,
-      cartItemTotalQuantity: prev.cartItemTotalQuantity + 1,
-      cartTotalPrice: prev.cartTotalPrice + addItem.price,
-      selectedCartItems: [...prev.selectedCartItems, addItem],
-    }));
+  const createCartItem = useCallback(
+    (addItem: Product) => {
+      setCartState((prev) => ({
+        ...prev,
+        cartItemTotalQuantity: prev.cartItemTotalQuantity + 1,
+        cartTotalPrice: prev.cartTotalPrice + addItem.price,
+        selectedCartItems: [...prev.selectedCartItems, addItem],
+      }));
 
-    stockDecrease(addItem.id);
-  }, []);
+      stockDecrease(addItem.id);
+    },
+    [stockDecrease],
+  );
 
   const addCartItem = useCallback(
     (productId: string) => {
@@ -62,12 +62,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const updatedQuantity = (targetCartItem?.quantity ?? 0) + 1;
-      const discountRate = getDiscountRate(
-        updatedQuantity,
-        targetCartItem!.id,
-        cartState.cartTotalPrice,
-        targetCartItem!.price * updatedQuantity,
-      );
+      const discountRate = getDiscountRate(updatedQuantity, targetCartItem!.id);
 
       setCartState((prev) => {
         const updatedItems = prev.selectedCartItems.map((item) =>
@@ -77,12 +72,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         const newTotalPrice = updatedItems.reduce((total, item) => {
-          const itemDiscountRate = getDiscountRate(
-            item.quantity,
-            item.id,
-            total,
-            item.price * item.quantity,
-          );
+          const itemDiscountRate = getDiscountRate(item.quantity, item.id);
           return total + item.price * item.quantity * (1 - itemDiscountRate);
         }, 0);
 
@@ -97,7 +87,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
       stockDecrease(productId);
     },
-    [getFindProduct, stockDecrease],
+    [
+      getFindProduct,
+      stockDecrease,
+      cartState.cartTotalPrice,
+      cartState.selectedCartItems,
+    ],
   );
 
   const decreaseCartItem = useCallback(
@@ -112,12 +107,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const updatedQuantity = targetCartItem!.quantity - 1;
-      const discountRate = getDiscountRate(
-        updatedQuantity,
-        targetCartItem!.id,
-        cartState.cartTotalPrice,
-        targetCartItem!.price * updatedQuantity,
-      );
+      const discountRate = getDiscountRate(updatedQuantity, targetCartItem!.id);
 
       setCartState((prev) => {
         const updatedItems = prev.selectedCartItems.map((item) =>
@@ -127,12 +117,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         const newTotalPrice = updatedItems.reduce((total, item) => {
-          const itemDiscountRate = getDiscountRate(
-            item.quantity,
-            item.id,
-            total,
-            item.price * item.quantity,
-          );
+          const itemDiscountRate = getDiscountRate(item.quantity, item.id);
           return total + item.price * item.quantity * (1 - itemDiscountRate);
         }, 0);
 
@@ -147,7 +132,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
       stockIncrease(productId);
     },
-    [getFindProduct, stockIncrease],
+    [
+      getFindProduct,
+      stockIncrease,
+      cartState.cartTotalPrice,
+      cartState.selectedCartItems,
+    ],
   );
 
   const removeCartItem = useCallback((targetProduct: Product) => {
@@ -157,12 +147,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       const newTotalPrice = updatedItems.reduce((total, item) => {
-        const itemDiscountRate = getDiscountRate(
-          item.quantity,
-          item.id,
-          total,
-          item.price * item.quantity,
-        );
+        const itemDiscountRate = getDiscountRate(item.quantity, item.id);
         return total + item.price * item.quantity * (1 - itemDiscountRate);
       }, 0);
 
